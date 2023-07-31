@@ -17,6 +17,8 @@ class AuthController extends Controller
      */
     public function loginView()
     {
+
+        //comentario de prueba
         $arrayDatos= $this->totalVendido();
 
         $array1= $this->cuentaClientes();
