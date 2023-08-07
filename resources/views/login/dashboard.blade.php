@@ -18,8 +18,8 @@
                                     <div class="flex">
                                         <i data-lucide="file-text" class="report-box__icon text-pending"></i>
                                         <div class="ml-auto">
-                                            <div class="report-box__indicator bg-success tooltip cursor-pointer" title="% de Pedidos en aumento ">
-                                                12% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <div id="aupedidos" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de Pedidos en aumento ">
+                                                0% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -36,8 +36,8 @@
                                     <div class="flex">
                                         <i data-lucide="box" class="report-box__icon text-pending"></i>
                                         <div class="ml-auto">
-                                            <div class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cajas en aumento ">
-                                                25% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <div id="aucajas" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cajas en aumento ">
+                                                0% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -54,8 +54,8 @@
                                     <div class="flex">
                                         <i data-lucide="banknote" class="report-box__icon text-warning"></i>
                                         <div class="ml-auto">
-                                            <div class="report-box__indicator bg-success tooltip cursor-pointer" title="% de ingresos en aumento">
-                                                35% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <div id="audinero" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de ingresos en aumento">
+                                                0% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -73,12 +73,12 @@
                                 <div class="box p-2">
                                     <div class="flex font-medium">
                                     <i data-lucide="trending-up" class="report-box__icon text-success" ></i>
-                                    <div class="ml-auto"><?php echo number_format( $array1['porcentaje'],2) ?>%</div>
                                     
                                         <div class="ml-auto">
                                             
-                                            <div  class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cubrimiento de clientes">
-                                                22% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <div id="auclientes" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cubrimiento de clientes">
+                                            <?php echo number_format( $array1['porcentaje'],2) ?>%
+                                            <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -115,6 +115,7 @@
                 <style>
                     #oilChart{
                         max-width: 500px;
+                        margin: auto !important;
                         height: 47px ! important;
                         width: 240px ! important;
                     }
@@ -163,7 +164,15 @@ function actualizaVentas() {
                         var sumaPed=0;
                         if(Number(valPedidos)===Number(row['totalPedidos'])){
                             sumaPed=valPedidos;
+                            document.getElementById("aupedidos").innerHTML = "0%";
                         }else{
+                            var resta=Number(row['totalPedidos'])-valPedidos;
+                            var porped = (resta*100)/valPedidos;
+
+                            document.getElementById("aupedidos").innerHTML = (Number(porped.toFixed(2)))+"%";
+                            //console.log("valor en aumento: "+ (Number(porped.toFixed(2))));
+                            //console.log("valor de la resta: "+resta);
+                        //console.log("suma total: "+sumaTotal);  
                             sumaPed= sumaPed +  Number(row['totalPedidos']);
                         }
                         
@@ -191,7 +200,16 @@ function actualizaVentas() {
                         var sumaCajas=0;
                         if(totalcajas===row['vtaCajas']){
                             sumaCajas=totalcajas;
+                            document.getElementById("aucajas").innerHTML = "0%";
                         }else{
+                            var resta=Number(row['vtaCajas'])-totalcajas;
+                            var porcaj = (resta*100)/totalcajas;
+
+                            document.getElementById("aucajas").innerHTML = (Number(porcaj.toFixed(2)))+"%";
+                            //console.log("valor en aumento cajas: "+ (Number(porcaj.toFixed(2))));
+                            //console.log("valor de la resta cajas: "+resta);
+
+
                             sumaCajas=  sumaCajas + parseFloat(row['vtaCajas']);
                             function uno2() {
                             function one2() {
@@ -224,10 +242,16 @@ function actualizaVentas() {
                         var sumaTotal=0;
                         if(parseFloat(totalVenta)===parseFloat(row['vtaTotal'])){
                             sumaTotal=totalVenta;
+                            document.getElementById("audinero").innerHTML = "0%";
                             //document.getElementById("vta").innerHTML ="$"+ separator(Number(totalVenta.toFixed(2)));
                         }else{
+                            var resta=Number(row['vtaTotal'])-totalVenta;
+                            var pordinero = (resta*100)/totalVenta;
+
+                            document.getElementById("audinero").innerHTML = (Number(pordinero.toFixed(2)))+"%";
+                            
                             sumaTotal=  Number((sumaTotal)+ parseFloat(row['vtaTotal']));
-                            ///este es para total de venta
+                            ///este es para total de vent
                         function uno1() {
                             function one1() {
                                  if ( totalVenta>=sumaTotal) {
@@ -243,9 +267,7 @@ function actualizaVentas() {
                             }
                             setTimeout(uno1,100);
                         } 
-                        console.log("valor anterior venta: "+ totalVenta);
-                        console.log("valor nuevo venta: "+row['vtaTotal']);
-                        console.log("suma total: "+sumaTotal);  
+                        
 
                     
                     });
@@ -310,6 +332,9 @@ function actualizaClientes() {
                //console.log("se ejecuta cada minuto");
                $(data).each(function (i, row) {       
                 //console.log("valor nuevo del cliente: "+row['porcentaje']);
+                console.log("valor en aumento clientes: "+ (Number(row['porcentaje'].toFixed(2))));
+
+                document.getElementById("auclientes").innerHTML = (Number(row['porcentaje'].toFixed(2)))+"%";
 
                 datosIngresos = {
                 data: [row['porcentaje'], 0, row['clixcomprar']], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
