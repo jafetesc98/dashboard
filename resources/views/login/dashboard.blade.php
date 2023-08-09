@@ -3,6 +3,8 @@
 @section('head')
     <title>Dashboard</title>
     <script src="dist/js/graficando.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-circular-gauge.min.js"></script>
 @endsection
 
 @section('content')
@@ -14,57 +16,57 @@
                     <div class="grid grid-cols-12 gap-6 ">
                         <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
-                                <div class="box p-2">
-                                    <div class="flex">
-                                        <i data-lucide="file-text" class="report-box__icon text-pending"></i>
+                                <div class="box p-3">
+                                    <div class="flex ">
+                                        <i data-lucide="file-text" class="report-box__icon text-pending" style="height: 50px !important; width: 50px !important;"></i>
                                         <div class="ml-auto">
                                             <div id="aupedidos" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de Pedidos en aumento ">
-                                                0% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <?php echo number_format( $array['porPedidos'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="ped" style="font-size: 50px !important;" class="text-3xl font-medium leading-8 mt-3">
+                                    <div id="ped" style="font-size: 50px !important;" class="p-5 text-3xl font-medium leading-8 mt-3">
                                         <?php echo  $array['totalPedidos'] ?>
                                     </div>
-                                    <div class="text-base text-slate-500 mt-2 ">Pedidos</div>
+                                    <div class="text-base text-slate-500 mt-10">Pedidos</div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
-                                <div class="box p-2">
+                                <div class="box p-3">
                                     <div class="flex">
-                                        <i data-lucide="box" class="report-box__icon text-pending"></i>
+                                        <i data-lucide="box" class="report-box__icon text-pending" style="height: 50px !important; width: 50px !important;"></i>
                                         <div class="ml-auto">
                                             <div id="aucajas" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cajas en aumento ">
-                                                0% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <?php echo number_format( $array['porCajas'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="caj" style="font-size: 50px !important;" class="text-3xl font-medium leading-8 mt-3">
+                                    <div id="caj" style="font-size: 50px !important;" class="text-3xl font-medium leading-8 mt-3 py-5">
                                         <?php echo number_format( $array['vtaCajas'],2) ?>
                                     </div>
-                                    <div class="text-base text-slate-500 mt-2 ">Cajas vendidas</div>
+                                    <div class="text-base text-slate-500 mt-10">Cajas vendidas</div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
-                                <div class="box p-2">
+                                <div class="box p-3">
                                     <div class="flex">
-                                        <i data-lucide="banknote" class="report-box__icon text-warning"></i>
+                                        <i data-lucide="banknote" class="report-box__icon text-warning" style="height: 50px !important; width: 50px !important;"></i>
                                         <div class="ml-auto">
                                             <div id="audinero" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de ingresos en aumento">
-                                                0% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <?php echo number_format( $array['porVenta'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <div id="vta" style="font-size: 37px !important;" class="text-3xl font-medium leading-8 mt-3">
+                                    <div id="vta" style="font-size: 37px !important;" class="text-3xl font-medium leading-8 mt-3 py-5">
                                         $<?php echo number_format( $array['vtaTotal'],2) ?> 
                                     </div>
                                     
-                                    <div class="text-base text-slate-500 mt-2 ">Total de ventas</div>
+                                    <div class="text-base text-slate-500 mt-10">Total de ventas</div>
                                 </div>
                             </div>
                         </div>
@@ -78,13 +80,14 @@
                                             
                                             <div id="auclientes" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cubrimiento de clientes">
                                             <?php echo number_format( $array1['porcentaje'],2) ?>%
-                                            <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-none ml-auto relative">
                                         <div class="">
-                                        <canvas id="oilChart">
+                                        <div id="veloci"></div>
+                                         <!-- <canvas id="oilChart">  --> 
                                         </div>
                                     </div>
                                     <div class="text-base text-slate-500 mt-1">Cubrimiento</div>
@@ -120,6 +123,16 @@
                         width: 240px ! important;
                     }
 
+                    #veloci {
+                    width: 100%;
+                    height: 100% ! important;
+                    margin: 0;
+                    padding: 0;
+                    }
+                    .anychart-credits{
+                        display:none !important;
+                    }
+                    
                 </style>
 @endsection
 
@@ -131,6 +144,7 @@
      var array2 = {{Js::from($array2)}};
      const sublineas = Object.keys(array2);
 
+     
 
   //Cuando la página esté cargada completamente
   window.addEventListener("load", function(){
@@ -140,12 +154,12 @@
     repetirgrafica();
     
         });
-
+        
 
 let identificadorIntervaloDeTiempo;
 
 function repetirventa() {
-  identificadorIntervaloDeTiempo = setInterval(actualizaVentas, 300000);
+  identificadorIntervaloDeTiempo = setInterval(actualizaVentas, 30000);
 }
 function actualizaVentas() {
   //console.log("Ha pasado 1 segundo.");
@@ -164,12 +178,12 @@ function actualizaVentas() {
                         var sumaPed=0;
                         if(Number(valPedidos)===Number(row['totalPedidos'])){
                             sumaPed=valPedidos;
-                            document.getElementById("aupedidos").innerHTML = "0%";
+                            //document.getElementById("aupedidos").innerHTML = "0%";
                         }else{
                             var resta=Number(row['totalPedidos'])-valPedidos;
                             var porped = (resta*100)/valPedidos;
 
-                            document.getElementById("aupedidos").innerHTML = (Number(porped.toFixed(2)))+"%";
+                            document.getElementById("aupedidos").innerHTML = (Number(row['porPedidos'].toFixed(2)))+"%";
                             //console.log("valor en aumento: "+ (Number(porped.toFixed(2))));
                             //console.log("valor de la resta: "+resta);
                         //console.log("suma total: "+sumaTotal);  
@@ -200,12 +214,12 @@ function actualizaVentas() {
                         var sumaCajas=0;
                         if(totalcajas===row['vtaCajas']){
                             sumaCajas=totalcajas;
-                            document.getElementById("aucajas").innerHTML = "0%";
+                            //document.getElementById("aucajas").innerHTML = "0%";
                         }else{
                             var resta=Number(row['vtaCajas'])-totalcajas;
                             var porcaj = (resta*100)/totalcajas;
 
-                            document.getElementById("aucajas").innerHTML = (Number(porcaj.toFixed(2)))+"%";
+                            document.getElementById("aucajas").innerHTML = (Number(row['porCajas'].toFixed(2)))+"%";
                             //console.log("valor en aumento cajas: "+ (Number(porcaj.toFixed(2))));
                             //console.log("valor de la resta cajas: "+resta);
 
@@ -242,13 +256,13 @@ function actualizaVentas() {
                         var sumaTotal=0;
                         if(parseFloat(totalVenta)===parseFloat(row['vtaTotal'])){
                             sumaTotal=totalVenta;
-                            document.getElementById("audinero").innerHTML = "0%";
+                            //document.getElementById("audinero").innerHTML = "0%";
                             //document.getElementById("vta").innerHTML ="$"+ separator(Number(totalVenta.toFixed(2)));
                         }else{
                             var resta=Number(row['vtaTotal'])-totalVenta;
                             var pordinero = (resta*100)/totalVenta;
 
-                            document.getElementById("audinero").innerHTML = (Number(pordinero.toFixed(2)))+"%";
+                            document.getElementById("audinero").innerHTML = (Number(row['porVenta'].toFixed(2)))+"%";
                             
                             sumaTotal=  Number((sumaTotal)+ parseFloat(row['vtaTotal']));
                             ///este es para total de vent
@@ -276,7 +290,7 @@ function actualizaVentas() {
        });
 }
 
-var oilCanvas = document.getElementById("oilChart");
+/* var oilCanvas = document.getElementById("oilChart");
 
 Chart.defaults.global.defaultFontFamily = "Lato";
 Chart.defaults.global.defaultFontSize = 18;
@@ -288,7 +302,8 @@ var oilData = {
             data: [array1['porcentaje'], array1['clixcomprar']],
             backgroundColor: [
         'rgba(21,101,192,1)',//color azul
-        'rgba(255,0,0,1)', //color rojo
+        'rgba(255,0,1,1)', //color rojo
+        //'rgba(231,231,231,1)', //color rojo
             ],
             borderColor: "black",
             borderWidth: 2
@@ -313,15 +328,151 @@ var pieChart = new Chart(oilCanvas, {
   
   data: oilData,
   options: chartOptions
-});
+}); */
 
 let identificadorIntervaloDeTiempo1;
 
 function repetirclientes() {
-  identificadorIntervaloDeTiempo1 = setInterval(actualizaClientes, 300000);
+  identificadorIntervaloDeTiempo1 = setInterval(actualizaClientes, 30000);
 }
+
+
+var grafi = anychart.onDocumentReady(function () {
+    
+    // create data set on our data
+    var dataSet = anychart.data.set([array1['porcentaje']]); //valores para la grafica
+    console.log("vALOR DEL DATO INICIAL DE LA GRAFICA: "+array1['porcentaje']);
+    // set the gauge type
+var gauge = anychart.gauges.circular();
+
+    // gauge settings
+ gauge.data(dataSet);
+gauge.padding("10%");
+gauge.startAngle(270);
+gauge.sweepAngle(180);
+/*gauge.fill(["blue", "grey"], .5, .5, null, 1, 0.5, 0.9);
+ */
+    // axis settings
+var axis = gauge.axis()
+.radius(95)
+.width(0);
+
+    // scale settings
+axis.scale()
+.minimum(0)
+.maximum(100)
+.ticks({interval: 10})
+.minorTicks({interval: 1});
+
+    // ticks settings
+axis.ticks()
+.type("trapezium")
+.fill("white")
+.length(9);
+
+    // minor ticks settings
+axis.minorTicks()
+.enabled(true)
+.fill("red")
+.length(1.5);
+
+// labels settings
+/* axis.labels()
+.fontSize("24px")
+.fontColor("black"); */
+
+// second axis settings
+var axis_1 = gauge.axis(1)
+.radius(55)
+.width(0);
+
+    // second scale settings
+/* axis_1.scale()
+.minimum(0)
+.maximum(150000)
+.ticks({interval: 100})
+.minorTicks({interval: 20}); */
+
+    // second ticks settings
+axis_1.ticks()
+.type("trapezium")
+.length(15);
+
+    // second minor ticks settings
+/* axis_1.minorTicks()
+.enabled(true)
+.length(5); */
+
+// labels 2 settings
+axis_1.labels()
+.fontSize("0px")
+.fontColor("white"); 
+
+// needle
+gauge.needle(0)
+.enabled(true)
+.startRadius("0%")
+.endRadius("80%")
+.middleRadius(0)
+.startWidth("1%")
+.endWidth("1%")
+.fill("black")
+.stroke("none")
+.middleWidth("1%");
+
+// marker
+gauge.marker(0)
+.axisIndex(1)
+.dataIndex(1)
+.size(7)
+.type("triangle-down")
+.position("outside")
+.radius(55);
+
+// bar
+gauge.bar(0)
+.axisIndex(1)
+.position("inside")
+.dataIndex(1)
+.width(3)
+.radius(60)
+.zIndex(10);
+
+// gap
+gauge.cap()
+.radius("3%");
+
+// gauge label
+gauge.label()
+.text("Cientes")
+.anchor("center") // set the position of the label
+.adjustFontSize(true)
+.hAlign("center")
+.offsetY("15%")
+.offsetX("50%")
+.width("50%")
+.height("10%")
+.zIndex(10);
+
+
+// range
+gauge.range({
+  from: 0,
+  to: 120,
+  fill: {keys: ["green", "yellow", "orange" , "red"]},
+  position: "inside",
+  radius: 100,
+  endSize: "3%",
+  startSize:"3%",
+  zIndex: 10
+});
+
+    // draw the chart
+gauge.container("veloci").draw();
+});
 function actualizaClientes() {
   //console.log("Ha pasado 1 segundo.");
+
   $.ajax(
        {
            url: 'clientes',               
@@ -329,32 +480,150 @@ function actualizaClientes() {
            contentType: 'json; charset=utf-8',
            type: 'GET',
            success: function (data) {
-               //console.log("se ejecuta cada minuto");
-               $(data).each(function (i, row) {       
-                //console.log("valor nuevo del cliente: "+row['porcentaje']);
-                console.log("valor en aumento clientes: "+ (Number(row['porcentaje'].toFixed(2))));
+               console.log("se ejecuta cada minuto");
+               $(data).each(function (i, row) {   
+                console.log("vALOR DEL DATO ACTUALIZADO DE LA GRAFICA: "+Number(row['porcentaje'].toFixed(2)));
+                document.getElementById("veloci").innerHTML = "";
+                document.getElementById("auclientes").innerHTML = Number(row['porcentaje'].toFixed(2))+"%";
+  
+anychart.onDocumentReady(function () {
+    
+    // create data set on our data
+    var dataSet = anychart.data.set([Number(row['porcentaje'].toFixed(2))]); //valores para la grafica
+    // set the gauge type
+var gauge1 = anychart.gauges.circular();
 
-                document.getElementById("auclientes").innerHTML = (Number(row['porcentaje'].toFixed(2)))+"%";
+    // gauge settings
+ gauge1.data(dataSet);
+gauge1.padding("10%");
+gauge1.startAngle(270);
+gauge1.sweepAngle(180);
+/*gauge.fill(["blue", "grey"], .5, .5, null, 1, 0.5, 0.9);
+ */
+    // axis settings
+var axis = gauge1.axis()
+.radius(95)
+.width(0);
 
-                datosIngresos = {
-                data: [row['porcentaje'], 0, row['clixcomprar']], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
-                // Ahora debería haber tantos background colors como datos, es decir, para este ejemplo, 4
-                backgroundColor: [
-                    'rgba(21,101,192,1)',//color azul
-                    'rgba(255,165,0,1)', //color naranja
-                    'rgba(255,0,0,1)', //color rojo
-                ],// Color de fondo
-                borderColor: [
-                    'rgba(0,0,0,1)',
-                    'rgba(0,0,0,1)',
-                    'rgba(0,0,0,1)',
-                ],// Color del borde
-                borderWidth: 0.2,// Ancho del borde
-            };
+    // scale settings
+axis.scale()
+.minimum(0)
+.maximum(100)
+.ticks({interval: 10})
+.minorTicks({interval: 1});
+
+    // ticks settings
+axis.ticks()
+.type("trapezium")
+.fill("white")
+.length(9);
+
+    // minor ticks settings
+axis.minorTicks()
+.enabled(true)
+.fill("red")
+.length(1.5);
+
+// labels settings
+/* axis.labels()
+.fontSize("24px")
+.fontColor("black"); */
+
+// second axis settings
+var axis_1 = gauge1.axis(1)
+.radius(55)
+.width(0);
+
+    // second scale settings
+/* axis_1.scale()
+.minimum(0)
+.maximum(150000)
+.ticks({interval: 100})
+.minorTicks({interval: 20}); */
+
+    // second ticks settings
+axis_1.ticks()
+.type("trapezium")
+.length(15);
+
+    // second minor ticks settings
+/* axis_1.minorTicks()
+.enabled(true)
+.length(5); */
+
+// labels 2 settings
+axis_1.labels()
+.fontSize("0px")
+.fontColor("white"); 
+
+// needle
+gauge1.needle(0)
+.enabled(true)
+.startRadius("0%")
+.endRadius("80%")
+.middleRadius(0)
+.startWidth("1%")
+.endWidth("1%")
+.fill("black")
+.stroke("none")
+.middleWidth("1%");
+
+// marker
+gauge1.marker(0)
+.axisIndex(1)
+.dataIndex(1)
+.size(7)
+.type("triangle-down")
+.position("outside")
+.radius(55);
+
+// bar
+gauge1.bar(0)
+.axisIndex(1)
+.position("inside")
+.dataIndex(1)
+.width(3)
+.radius(60)
+.zIndex(10);
+
+// gap
+gauge1.cap()
+.radius("3%");
+
+// gauge label
+gauge1.label()
+.text("Cientes")
+.anchor("center") // set the position of the label
+.adjustFontSize(true)
+.hAlign("center")
+.offsetY("15%")
+.offsetX("50%")
+.width("50%")
+.height("10%")
+.zIndex(10);
+
+
+// range
+gauge1.range({
+  from: 0,
+  to: 120,
+  fill: {keys: ["green", "yellow", "orange" , "red"]},
+  position: "inside",
+  radius: 100,
+  endSize: "3%",
+  startSize:"3%",
+  zIndex: 10
+});
+
+    // draw the chart
+gauge1.container("veloci").draw();
+});
+
             });
            },
        });
 }
+
 
 let identificadorIntervaloDeTiempo2;
 
@@ -482,6 +751,8 @@ function separator(numb) {
     str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return str.join(".");
 }
+
+
 
 </script>
 @endsection

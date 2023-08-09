@@ -24,7 +24,7 @@ class AuthController extends Controller
         $array1= $this->cuentaClientes();
 
         $array2=  $this->ventaXsublinea();
-        //return  $this->convierteCajas();
+        //return  $array1;
         return view('login.dashboard')->with('array', $arrayDatos)->with('array1', $array1)->with('array2', $array2);
     }
     public function arreglo()
@@ -42,6 +42,8 @@ class AuthController extends Controller
         $total=0;
         $SubTCajas=0;
 
+        $clientes =DB::select("SET NOCOUNT ON; select cve from cxccli (nolock) where seg_mer = 'EXP'");
+        $totclientes = count($clientes, COUNT_RECURSIVE);
         $arrayDatos=array();
 
         for( $i=0; $i< $totaldatos; $i++){
@@ -54,10 +56,18 @@ class AuthController extends Controller
         $totPaqConver=$this->convierteCajas();
         //$numero =  rand(1, 100);
         //$numero1 =  100000 / rand(1, 100000) + 100;
+        $sum=round($SubTCajas+ $totPaqConver,2);
+        $porVenta=($total*100)/60000000;
+        $porPedidos=($totaPedidos*100)/$totclientes;
+        $porCajas=($sum*100)/341882;
+
         $arrayDatos=array(
             'vtaTotal'=>round($total,2),//round($numero_aleatorio,2), //aqui va el total
             'vtaCajas'=>round($SubTCajas+ $totPaqConver,2),//$numero1,//round($SubTCajas+ $totPaqConver,2),//$SubTCajas+ $totPaqConver,
             'totalPedidos'=>$totaPedidos,//$numero, //$totaPedidos,
+            'porVenta' =>$porVenta, //porcentaje de ventas con respecto a meta
+            'porPedidos'=> $porPedidos, //porcentaje de pedidos con respecto a clientes
+            'porCajas'=>$porCajas, //porcentaje de cajas con respecto a meta anterior 
         );
 
         return $arrayDatos;
