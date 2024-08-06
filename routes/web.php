@@ -25,4 +25,5 @@ Route::controller(AuthController::class)->middleware('loggedin')->group(function
     Route::get('dashboard1', 'arreglo')->name('login.arreglo');//esta es la ruta para el arreglo 
     Route::get('clientes', 'cuentaClientes')->name('login.cuentaClientes');//esta es la ruta para los datos de los clientes
     Route::get('grafica', 'ventaXsublinea')->name('login.ventaXsublinea');//ruta para actualizar la grafica
+    Route::get('cli', 'clientescomp')->name('login.clientescomp');//ruta para actualizar la grafica
 });

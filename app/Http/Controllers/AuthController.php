@@ -24,7 +24,7 @@ class AuthController extends Controller
         $array1= $this->cuentaClientes();
 
         $array2=  $this->ventaXsublinea();
-        //return  $array1;
+        //return  $array2;
         return view('login.dashboard')->with('array', $arrayDatos)->with('array1', $array1)->with('array2', $array2);
     }
     public function arreglo()
@@ -41,10 +41,15 @@ class AuthController extends Controller
         $totaldatos = count($datos, COUNT_RECURSIVE);
         $total=0;
         $SubTCajas=0;
+        $clietot=0;
+        $porcliecomp=0;
 
         $clientes =DB::select("SET NOCOUNT ON; select cve from cxccli (nolock) where seg_mer = 'EXP'");
         $totclientes = count($clientes, COUNT_RECURSIVE);
         $arrayDatos=array();
+
+        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from pedped (nolock) where  status<>'PC  ' and status not in ('CC  ')");
+         $clietot=$clientescomprados[0]->cte;
 
         for( $i=0; $i< $totaldatos; $i++){
             $total+=$datos[$i]->SubTot_Imp;
@@ -57,9 +62,11 @@ class AuthController extends Controller
         //$numero =  rand(1, 100);
         //$numero1 =  100000 / rand(1, 100000) + 100;
         $sum=round($SubTCajas+ $totPaqConver,2);
-        $porVenta=($total*100)/60000000;
-        $porPedidos=($totaPedidos*100)/$totclientes;
-        $porCajas=($sum*100)/341882;
+        $porVenta=($total*100)/70000000;
+        $porPedidos=($totaPedidos*100)/1650;
+        //$porCajas=($sum*100)/341882; 393,164
+        $porCajas=($sum*100)/393165;
+        $porcliecomp=($clietot*100)/400;
 
         $arrayDatos=array(
             'vtaTotal'=>round($total,2),//round($numero_aleatorio,2), //aqui va el total
@@ -68,6 +75,8 @@ class AuthController extends Controller
             'porVenta' =>$porVenta, //porcentaje de ventas con respecto a meta
             'porPedidos'=> $porPedidos, //porcentaje de pedidos con respecto a clientes
             'porCajas'=>$porCajas, //porcentaje de cajas con respecto a meta anterior 
+            'clieComp'=>$clietot, //total de clientes comprados
+            'porcliencomp'=>$porcliecomp, //total de clientes comprados
         );
 
         return $arrayDatos;
@@ -115,13 +124,17 @@ class AuthController extends Controller
     }
 
     public function cuentaPedidos(){
-        $datos =DB::select("SET NOCOUNT ON; select num from pedped (nolock) where status<>'PC  '");
+        $datos =DB::select("SET NOCOUNT ON; select num from pedped (nolock) where status<>'PC  ' and status not in ('CC  ')");
         $totalpedidos = count($datos, COUNT_RECURSIVE);
         //$numero_aleatorio = rand(1,100);
         return $totalpedidos;
     }
 
     public function cuentaClientes(){
+
+        $clietot=0;
+        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from pedped (nolock) where  status<>'PC  ' and status not in ('CC  ')");
+        $clietot=$clientescomprados[0]->cte;
         
         $clientes =DB::select("SET NOCOUNT ON; select cve from cxccli (nolock) where seg_mer = 'EXP'");
         $pedidos =DB::select("SET NOCOUNT ON; select distinct cte  from pedped a (nolock) inner join cxccli b  (nolock)
@@ -129,12 +142,29 @@ class AuthController extends Controller
         $totclientes = count($clientes, COUNT_RECURSIVE);
         $totclicompra = count($pedidos, COUNT_RECURSIVE);
         
-        $total = ($totclicompra*100)/$totclientes;
+        $total = ($totclicompra*100)/584;
         $clieXcomprar= 100-$total;
 
         $arrayDatos=array(
             'porcentaje'=>round($total,2), //aqui va el porcentaje que compraron 
             'clixcomprar'=>round($clieXcomprar,2),//aqui va el porcentaje x comprar ,
+        );
+
+
+        return $arrayDatos ;
+    }
+
+    public function clientescomp(){
+
+        $clietot=0;
+        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from pedped (nolock) where  status<>'PC  ' and status not in ('CC  ')");
+        $clietot=$clientescomprados[0]->cte;
+        
+        $porcliecomp=($clietot*100)/400;
+
+        $arrayDatos=array(
+            'cliente'=>$clietot, //aqui va el porcentaje que compraron 
+            'porcliente'=>round($porcliecomp,2),//aqui va el porcentaje x comprar ,
         );
 
 
@@ -149,7 +179,7 @@ class AuthController extends Controller
         on b.s_lin=c.cve
         inner join pedped d (nolock)
         on a.cve=d.num
-        where a.status<>'PC '");
+        where a.status<>'PC ' ");
         
         $array1 = json_decode(json_encode($datos), true);
         $totaldatos = count($datos, COUNT_RECURSIVE);

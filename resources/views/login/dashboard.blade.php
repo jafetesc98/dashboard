@@ -10,7 +10,7 @@
 @section('content')
 <div class="col-span-12 ">
                     <div class="intro-y flex items-center h-10">
-                        <h2 class="text-lg font-medium truncate mr-5" style="color: white;"> Reporte General Expo 2023</h2>
+                        <h2 class="text-lg font-medium truncate mr-5" style="color: white;"> Reporte General Expo 2024</h2>
                         
                     </div>
                     <div class="grid grid-cols-12 gap-6 ">
@@ -18,9 +18,27 @@
                             <div class="report-box zoom-in">
                                 <div class="box p-3">
                                     <div class="flex ">
-                                        <i data-lucide="file-text" class="report-box__icon text-pending" style="height: 50px !important; width: 50px !important;"></i>
+                                        <i data-lucide="user" class="report-box__icon text-success" style="height: 50px !important; width: 50px !important;"></i>
                                         <div class="ml-auto">
-                                            <div id="aupedidos" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de Pedidos en aumento ">
+                                            <div id="porclientes" class="report-box__indicator bg-blue-800 tooltip cursor-pointer" title="% de clientes en aumento ">
+                                            <?php echo number_format( $array['porcliencomp'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="clie" style="font-size: 50px !important;" class="p-5 text-3xl font-medium leading-8 mt-3">
+                                        <?php echo  $array['clieComp'] ?>
+                                    </div>
+                                    <div class="text-base text-slate-500 mt-10">Total Clientes </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                            <div class="report-box zoom-in">
+                                <div class="box p-3">
+                                    <div class="flex ">
+                                        <i data-lucide="file-text" class="report-box__icon text-success" style="height: 50px !important; width: 50px !important;"></i>
+                                        <div class="ml-auto">
+                                            <div id="aupedidos" class="report-box__indicator bg-blue-800 tooltip cursor-pointer" title="% de Pedidos en aumento ">
                                             <?php echo number_format( $array['porPedidos'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
@@ -36,10 +54,10 @@
                             <div class="report-box zoom-in">
                                 <div class="box p-3">
                                     <div class="flex">
-                                        <i data-lucide="box" class="report-box__icon text-pending" style="height: 50px !important; width: 50px !important;"></i>
+                                        <i data-lucide="box" class="report-box__icon text-success" style="height: 50px !important; width: 50px !important;"></i>
                                         <div class="ml-auto">
-                                            <div id="aucajas" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cajas en aumento ">
-                                            <?php echo number_format( $array['porCajas'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
+                                            <div id="aucajas" class="report-box__indicator bg-blue-800 tooltip cursor-pointer" title="% de cajas en aumento ">
+                                            <?php echo number_format( $array['porCajas'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5 "></i>
                                             </div>
                                         </div>
                                     </div>
@@ -54,9 +72,9 @@
                             <div class="report-box zoom-in">
                                 <div class="box p-3">
                                     <div class="flex">
-                                        <i data-lucide="banknote" class="report-box__icon text-warning" style="height: 50px !important; width: 50px !important;"></i>
+                                        <i data-lucide="banknote" class="report-box__icon text-success" style="height: 50px !important; width: 50px !important;"></i>
                                         <div class="ml-auto">
-                                            <div id="audinero" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de ingresos en aumento">
+                                            <div id="audinero" class="report-box__indicator bg-blue-800 tooltip cursor-pointer" title="% de ingresos en aumento">
                                             <?php echo number_format( $array['porVenta'],2) ?>% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i>
                                             </div>
                                         </div>
@@ -70,30 +88,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                            <div class="report-box zoom-in">
-                                <div class="box p-2">
-                                    <div class="flex font-medium">
-                                    <i data-lucide="trending-up" class="report-box__icon text-success" ></i>
-                                    
-                                        <div class="ml-auto">
-                                            
-                                            <div id="auclientes" class="report-box__indicator bg-success tooltip cursor-pointer" title="% de cubrimiento de clientes">
-                                            <?php echo number_format( $array1['porcentaje'],2) ?>%
-                                            
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none ml-auto relative">
-                                        <div class="">
-                                        <div id="veloci"></div>
-                                         <!-- <canvas id="oilChart">  --> 
-                                        </div>
-                                    </div>
-                                    <div class="text-base text-slate-500 mt-1">Cubrimiento</div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -475,149 +470,18 @@ function actualizaClientes() {
 
   $.ajax(
        {
-           url: 'clientes',               
+           url: 'cli',               
            data: "",
            contentType: 'json; charset=utf-8',
            type: 'GET',
            success: function (data) {
                console.log("se ejecuta cada minuto");
                $(data).each(function (i, row) {   
-                console.log("vALOR DEL DATO ACTUALIZADO DE LA GRAFICA: "+Number(row['porcentaje'].toFixed(2)));
-                document.getElementById("veloci").innerHTML = "";
-                document.getElementById("auclientes").innerHTML = Number(row['porcentaje'].toFixed(2))+"%";
+                console.log(row);
+                //document.getElementById("porclientes").innerHTML = (Number(row['porcliente'].toFixed(2)))+"%";
+                document.getElementById("clie").innerHTML = row['cliente'] ;
+                //document.getElementById("porclientes").innerHTML = row['porcliente'] +"%";
   
-anychart.onDocumentReady(function () {
-    
-    // create data set on our data
-    var dataSet = anychart.data.set([Number(row['porcentaje'].toFixed(2))]); //valores para la grafica
-    // set the gauge type
-var gauge1 = anychart.gauges.circular();
-
-    // gauge settings
- gauge1.data(dataSet);
-gauge1.padding("10%");
-gauge1.startAngle(270);
-gauge1.sweepAngle(180);
-/*gauge.fill(["blue", "grey"], .5, .5, null, 1, 0.5, 0.9);
- */
-    // axis settings
-var axis = gauge1.axis()
-.radius(95)
-.width(0);
-
-    // scale settings
-axis.scale()
-.minimum(0)
-.maximum(100)
-.ticks({interval: 10})
-.minorTicks({interval: 1});
-
-    // ticks settings
-axis.ticks()
-.type("trapezium")
-.fill("white")
-.length(9);
-
-    // minor ticks settings
-axis.minorTicks()
-.enabled(true)
-.fill("red")
-.length(1.5);
-
-// labels settings
-/* axis.labels()
-.fontSize("24px")
-.fontColor("black"); */
-
-// second axis settings
-var axis_1 = gauge1.axis(1)
-.radius(55)
-.width(0);
-
-    // second scale settings
-/* axis_1.scale()
-.minimum(0)
-.maximum(150000)
-.ticks({interval: 100})
-.minorTicks({interval: 20}); */
-
-    // second ticks settings
-axis_1.ticks()
-.type("trapezium")
-.length(15);
-
-    // second minor ticks settings
-/* axis_1.minorTicks()
-.enabled(true)
-.length(5); */
-
-// labels 2 settings
-axis_1.labels()
-.fontSize("0px")
-.fontColor("white"); 
-
-// needle
-gauge1.needle(0)
-.enabled(true)
-.startRadius("0%")
-.endRadius("80%")
-.middleRadius(0)
-.startWidth("1%")
-.endWidth("1%")
-.fill("black")
-.stroke("none")
-.middleWidth("1%");
-
-// marker
-gauge1.marker(0)
-.axisIndex(1)
-.dataIndex(1)
-.size(7)
-.type("triangle-down")
-.position("outside")
-.radius(55);
-
-// bar
-gauge1.bar(0)
-.axisIndex(1)
-.position("inside")
-.dataIndex(1)
-.width(3)
-.radius(60)
-.zIndex(10);
-
-// gap
-gauge1.cap()
-.radius("3%");
-
-// gauge label
-gauge1.label()
-.text("Cientes")
-.anchor("center") // set the position of the label
-.adjustFontSize(true)
-.hAlign("center")
-.offsetY("15%")
-.offsetX("50%")
-.width("50%")
-.height("10%")
-.zIndex(10);
-
-
-// range
-gauge1.range({
-  from: 0,
-  to: 120,
-  fill: {keys: ["green", "yellow", "orange" , "red"]},
-  position: "inside",
-  radius: 100,
-  endSize: "3%",
-  startSize:"3%",
-  zIndex: 10
-});
-
-    // draw the chart
-gauge1.container("veloci").draw();
-});
 
             });
            },
@@ -630,6 +494,7 @@ let identificadorIntervaloDeTiempo2;
 function repetirgrafica() {
   identificadorIntervaloDeTiempo2 = setInterval(actualizaGrafica, 300000);
 }
+
 function actualizaGrafica() {
   //console.log("Ha pasado 1 segundo.");
   $.ajax(
@@ -654,7 +519,7 @@ var densityData = {
   array2[sublineas[5]]['subtotal'],array2[sublineas[6]]['subtotal'],array2[sublineas[7]]['subtotal'],array2[sublineas[8]]['subtotal'],array2[sublineas[9]]['subtotal'],
   array2[sublineas[10]]['subtotal'],array2[sublineas[11]]['subtotal'],array2[sublineas[12]]['subtotal'],array2[sublineas[13]]['subtotal'],array2[sublineas[14]]['subtotal'],
   array2[sublineas[15]]['subtotal'],array2[sublineas[16]]['subtotal'],array2[sublineas[17]]['subtotal'],array2[sublineas[18]]['subtotal'],array2[sublineas[19]]['subtotal']],
-  backgroundColor:'rgba(21,101,192,1)',
+  backgroundColor:'rgba(8,71,130,255)',
   
     
 };
@@ -696,6 +561,7 @@ barChart.update();
            },
        });
 }
+
 var densityCanvas = document.getElementById("densityChart");
 
 Chart.defaults.global.defaultFontFamily='Roboto'
@@ -708,7 +574,8 @@ var densityData = {
   array2[sublineas[5]]['subtotal'],array2[sublineas[6]]['subtotal'],array2[sublineas[7]]['subtotal'],array2[sublineas[8]]['subtotal'],array2[sublineas[9]]['subtotal'],
   array2[sublineas[10]]['subtotal'],array2[sublineas[11]]['subtotal'],array2[sublineas[12]]['subtotal'],array2[sublineas[13]]['subtotal'],array2[sublineas[14]]['subtotal'],
   array2[sublineas[15]]['subtotal'],array2[sublineas[16]]['subtotal'],array2[sublineas[17]]['subtotal'],array2[sublineas[18]]['subtotal'],array2[sublineas[19]]['subtotal']],
-  backgroundColor:'rgba(21,101,192,1)',
+  backgroundColor:'rgba(8,71,130,255)',
+  //backgroundColor:'rgba(21,71,130,1)', 8,71,130,255
   
     
 };
