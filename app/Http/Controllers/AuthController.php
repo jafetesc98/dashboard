@@ -37,7 +37,8 @@ class AuthController extends Controller
 
 
     public function totalVendido(){
-        $datos =DB::select("SET NOCOUNT ON; select b.ped, b.SubTot_Imp,Emp from PedpedExpo2024 a (nolock) left join peddet b (nolock) on a.num=b.cve where a.status<>'PC  '  ");
+        //$datos =DB::select("SET NOCOUNT ON; select b.ped, b.SubTot_Imp,Emp from PedpedExpo2024 a (nolock) left join peddet b (nolock) on a.num=b.cve where a.status<>'PC  '  ");
+        $datos =DB::select("SET NOCOUNT ON;  select b.ped,b.total-b.descto-b.desc_cli-b.desc_acum-b.desc_prom-b.desc_cond[subtotal],Emp from PedpedExpo2024 a (nolock) left join PeddetExpo2024 b (nolock) on a.num=b.cve where a.status<>'PC  ' ");
         $totaldatos = count($datos, COUNT_RECURSIVE);
         $total=0;
         $SubTCajas=0;
