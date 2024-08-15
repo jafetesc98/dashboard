@@ -37,7 +37,7 @@ class AuthController extends Controller
 
 
     public function totalVendido(){
-        $datos =DB::select("SET NOCOUNT ON; select b.ped, b.SubTot_Imp,Emp from pedped a (nolock) left join peddet b (nolock) on a.num=b.cve where a.status<>'PC  '  ");
+        $datos =DB::select("SET NOCOUNT ON; select b.ped, b.SubTot_Imp,Emp from PedpedExpo2024 a (nolock) left join peddet b (nolock) on a.num=b.cve where a.status<>'PC  '  ");
         $totaldatos = count($datos, COUNT_RECURSIVE);
         $total=0;
         $SubTCajas=0;
@@ -48,7 +48,7 @@ class AuthController extends Controller
         $totclientes = count($clientes, COUNT_RECURSIVE);
         $arrayDatos=array();
 
-        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from pedped (nolock) where  status<>'PC  ' and status not in ('CC  ')");
+        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from PedpedExpo2024 (nolock) where  status<>'PC  ' and status not in ('CC  ')");
          $clietot=$clientescomprados[0]->cte;
 
         for( $i=0; $i< $totaldatos; $i++){
@@ -84,7 +84,7 @@ class AuthController extends Controller
     public function convierteCajas(){
         
         $datos =DB::select("SET NOCOUNT ON; select a.cve, a.par, a.r_par, a.cve_art,a.des,a.ped,a.fac_sal, b.fac_minimo
-        from peddet a (nolock) inner join invars b (nolock)
+        from PeddetExpo2024 a (nolock) inner join invars b (nolock)
         on a.cve_art=b.cve_art and a.cia=b.cia
          where a.Emp not in ('CJA','BTO')  and SUBSTRING(b.sub_alm, 4, 4) ='C' ");
          
@@ -124,7 +124,7 @@ class AuthController extends Controller
     }
 
     public function cuentaPedidos(){
-        $datos =DB::select("SET NOCOUNT ON; select num from pedped (nolock) where status<>'PC  ' and status not in ('CC  ')");
+        $datos =DB::select("SET NOCOUNT ON; select num from PedpedExpo2024 (nolock) where status<>'PC  ' and status not in ('CC  ')");
         $totalpedidos = count($datos, COUNT_RECURSIVE);
         //$numero_aleatorio = rand(1,100);
         return $totalpedidos;
@@ -133,11 +133,11 @@ class AuthController extends Controller
     public function cuentaClientes(){
 
         $clietot=0;
-        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from pedped (nolock) where  status<>'PC  ' and status not in ('CC  ')");
+        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from PedpedExpo2024 (nolock) where  status<>'PC  ' and status not in ('CC  ')");
         $clietot=$clientescomprados[0]->cte;
         
         $clientes =DB::select("SET NOCOUNT ON; select cve from cxccli (nolock) where seg_mer = 'EXP'");
-        $pedidos =DB::select("SET NOCOUNT ON; select distinct cte  from pedped a (nolock) inner join cxccli b  (nolock)
+        $pedidos =DB::select("SET NOCOUNT ON; select distinct cte  from PedpedExpo2024 a (nolock) inner join cxccli b  (nolock)
         on a.cte=b.cve where a.seg_mer = 'EXP'"); 
         $totclientes = count($clientes, COUNT_RECURSIVE);
         $totclicompra = count($pedidos, COUNT_RECURSIVE);
@@ -157,7 +157,7 @@ class AuthController extends Controller
     public function clientescomp(){
 
         $clietot=0;
-        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from pedped (nolock) where  status<>'PC  ' and status not in ('CC  ')");
+        $clientescomprados = DB::select("SET NOCOUNT ON; select COUNT(distinct cte) [cte] from PedpedExpo2024 (nolock) where  status<>'PC  ' and status not in ('CC  ')");
         $clietot=$clientescomprados[0]->cte;
         
         $porcliecomp=($clietot*100)/400;
@@ -172,12 +172,12 @@ class AuthController extends Controller
     }
     public function ventaXsublinea(){
         $datos =DB::select("SET NOCOUNT ON; select a.cve, a.cve_art, LTRIM(RTRIM(a.des)) [des], a.ped, a.fac_sal, b.s_lin,LTRIM(RTRIM(c.des))[nombre],a.Emp
-        from peddet a (nolock)
+        from PeddetExpo2024 a (nolock)
         inner join inviar b (nolock)
         on a.cve_art=b.art
         inner join invsli c (nolock)
         on b.s_lin=c.cve
-        inner join pedped d (nolock)
+        inner join PedpedExpo2024 d (nolock)
         on a.cve=d.num
         where a.status<>'PC ' ");
         
